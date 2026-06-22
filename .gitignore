@@ -1,0 +1,17 @@
+# Скрываем виртуальное окружение Python
+.venv/
+venv/
+ENV/
+
+# Скрываем файлы кэша Python (чтобы не засорять Git)
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Скрываем секретные ключи, токены и пароли
+.env
+config/secret.json
+
+# Логи и временные файлы
+*.log
+.pytest_cache/
