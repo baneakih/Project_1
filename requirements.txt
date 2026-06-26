@@ -2,4 +2,3 @@ pyTelegramBotAPI
 python-dotenv
 pytz
 requests
-cryptography
