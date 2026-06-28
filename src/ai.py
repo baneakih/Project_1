@@ -4,7 +4,8 @@ import re
 
 import requests
 
-from utils import DATE_FORMAT, get_now_msk, normalize_remind_date
+from config import DATE_FORMAT, OPENROUTER_MODELS, OPENROUTER_URL
+from utils import get_now_msk, normalize_remind_date
 
 
 def parse_task_with_ai(user_text: str):
@@ -12,7 +13,6 @@ def parse_task_with_ai(user_text: str):
     if not api_key:
         return {"error": "OPENROUTER_API_KEY не найден в .env"}
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
@@ -31,15 +31,9 @@ def parse_task_with_ai(user_text: str):
         "Ответь только валидным JSON без markdown и без пояснений."
     )
 
-    models = [
-        "deepseek/deepseek-chat-v3-0324",
-        "openai/gpt-oss-20b:free",
-        "meta-llama/llama-3.3-70b-instruct:free",
-    ]
-
     last_error = None
 
-    for model in models:
+    for model in OPENROUTER_MODELS:
         payload = {
             "model": model,
             "messages": [
@@ -56,7 +50,7 @@ def parse_task_with_ai(user_text: str):
 
         try:
             response = requests.post(
-                url,
+                OPENROUTER_URL,
                 headers=headers,
                 json=payload,
                 timeout=15,

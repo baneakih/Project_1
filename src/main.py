@@ -6,6 +6,7 @@ from datetime import timedelta
 import telebot
 from dotenv import load_dotenv
 from telebot import types
+from config import TASK_WORDS
 
 from database import (
     add_smart_task,
@@ -45,27 +46,6 @@ if not BOT_TOKEN:
 
 bot = telebot.TeleBot(BOT_TOKEN, threaded=True, num_threads=8)
 user_creation_data: dict[int, dict] = {}
-
-TASK_WORDS = [
-    "напомни",
-    "напомнить",
-    "завтра",
-    "сегодня",
-    "послезавтра",
-    "через",
-    "купить",
-    "сделать",
-    "позвонить",
-    "созвон",
-    "встреча",
-    "задача",
-    "дедлайн",
-    "запланируй",
-    "запиши",
-    "не забыть",
-    "надо",
-    "нужно",
-]
 
 
 # ---------- Helpers ----------

@@ -1,15 +1,6 @@
-import os
 from datetime import datetime
 
-import pytz
-from dotenv import load_dotenv
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(BASE_DIR)
-load_dotenv(os.path.join(PROJECT_DIR, ".env"))
-
-MOSCOW_TZ = pytz.timezone("Europe/Moscow")
-DATE_FORMAT = "%d.%m.%Y %H:%M"
+from config import DATE_FORMAT, MOSCOW_TZ
 
 
 # ---------- Time / validation ----------

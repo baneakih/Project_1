@@ -1,11 +1,8 @@
-import os
 import sqlite3
 from datetime import datetime, timedelta
 
-from utils import DATE_FORMAT, get_now_msk, normalize_remind_date
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "todo.db")
+from config import DATE_FORMAT, DB_PATH
+from utils import get_now_msk, normalize_remind_date
 
 
 def get_db_connection() -> sqlite3.Connection:
