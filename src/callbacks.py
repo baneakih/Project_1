@@ -208,7 +208,8 @@ def register_callback_handlers(bot, user_creation_data: dict[int, dict]):
             msg = bot.send_message(
                 chat_id,
                 "❌ Неверный формат даты.\n\n"
-                "Введите так: 22.06.2026 18:30\n"
+                "Дата должна быть в будущем и в формате:\n"
+                "22.06.2026 18:30\n\n"
                 "Или напишите: пропустить",
             )
 
