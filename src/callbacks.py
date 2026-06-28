@@ -317,6 +317,13 @@ def register_callback_handlers(bot, user_creation_data: dict[int, dict]):
 
         markup.add(
             types.InlineKeyboardButton(
+                "⏰ Напомнить через 1 час",
+                callback_data=f"snooze60_{task_id}",
+            )
+        )
+
+        markup.add(
+            types.InlineKeyboardButton(
                 "❌ Полностью удалить",
                 callback_data=f"delete_{task_id}",
             )

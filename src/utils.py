@@ -18,6 +18,11 @@ def normalize_remind_date(value: str | None) -> str | None:
 
     try:
         parsed = datetime.strptime(value, DATE_FORMAT)
+        parsed = MOSCOW_TZ.localize(parsed)
+
+        if parsed <= get_now_msk():
+            return None
+
         return parsed.strftime(DATE_FORMAT)
     except ValueError:
         return None
