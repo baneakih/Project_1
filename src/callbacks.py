@@ -25,7 +25,15 @@ def answer_callback(bot, call, text: str | None = None) -> None:
     try:
         bot.answer_callback_query(call.id, text=text)
     except Exception as e:
-        print(f"Ошибка answer_callback_query: {e}")
+        error_text = str(e).lower()
+        ignored_errors = [
+            "query is too old",
+            "response timeout expired",
+            "query id is invalid",
+        ]
+
+        if not any(error in error_text for error in ignored_errors):
+            print(f"Ошибка answer_callback_query: {e}")
 
 
 def safe_edit_message_text(
