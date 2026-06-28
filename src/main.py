@@ -1,5 +1,4 @@
 import os
-import time
 import threading
 from datetime import timedelta
 
@@ -24,6 +23,7 @@ from database import (
 )
 
 from ai import parse_task_with_ai
+from reminders import check_reminders
 
 from utils import (
     get_now_msk,
@@ -104,43 +104,6 @@ def is_task_like(text: str) -> bool:
 def get_tasks_keyboard(user_id: int):
     tasks = get_all_active_tasks(user_id)
     return make_tasks_keyboard(tasks)
-
-
-# ---------- Reminders ----------
-def check_reminders():
-    while True:
-        try:
-            now_msk = get_now_msk().strftime("%d.%m.%Y %H:%M")
-            tasks = get_global_active_reminders()
-
-            for task_id, user_id, title, description, remind_date in tasks:
-                if not remind_date or remind_date.strip() != now_msk:
-                    continue
-
-                desc_text = f"\n📄 Описание: {description}" if description else ""
-                msg = (
-                    f"⏰ НАПОМИНАНИЕ!\n\n"
-                    f"📌 {title}"
-                    f"{desc_text}\n\n"
-                    f"Задача не закрыта автоматически. Отметьте её выполненной, когда закончите."
-                )
-
-                try:
-                    bot.send_message(
-                        user_id,
-                        msg,
-                        reply_markup=make_reminder_keyboard(task_id),
-                    )
-                    mark_reminder_sent(task_id)
-                except Exception as send_error:
-                    print(
-                        f"Не удалось отправить уведомление пользователю {user_id}: {send_error}"
-                    )
-
-            time.sleep(30)
-        except Exception as e:
-            print(f"Ошибка в фоновом таймере: {e}")
-            time.sleep(10)
 
 
 # ---------- Commands ----------
@@ -646,7 +609,11 @@ def global_callback_catcher(call):
 
 
 if __name__ == "__main__":
-    reminder_thread = threading.Thread(target=check_reminders, daemon=True)
+    reminder_thread = threading.Thread(
+        target=check_reminders,
+        args=(bot,),
+        daemon=True,
+    )
     reminder_thread.start()
     print("Maritaro AI Planner запущен.")
     bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=20)
