@@ -22,11 +22,12 @@ from database import (
     toggle_user_task_status,
 )
 
+from ai import parse_task_with_ai
+
 from utils import (
     get_now_msk,
     is_valid_remind_date,
     normalize_remind_date,
-    parse_task_with_ai,
 )
 
 from keyboards import (
