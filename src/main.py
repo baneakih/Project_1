@@ -7,23 +7,26 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 
-from utils import (
+from database import (
     add_smart_task,
     delete_all_tasks_permanently,
     delete_task_permanently,
     get_all_active_tasks,
     get_global_active_reminders,
-    get_now_msk,
     get_task_details,
     get_tasks_for_day,
     get_user_stats,
     init_db,
-    is_valid_remind_date,
     mark_reminder_sent,
-    normalize_remind_date,
-    parse_task_with_ai,
     snooze_task,
     toggle_user_task_status,
+)
+
+from utils import (
+    get_now_msk,
+    is_valid_remind_date,
+    normalize_remind_date,
+    parse_task_with_ai,
 )
 
 from keyboards import (
@@ -117,8 +120,6 @@ def is_task_like(text: str) -> bool:
 
 
 # ---------- Keyboards ----------
-
-
 def make_tasks_keyboard(user_id: int):
     markup = types.InlineKeyboardMarkup()
     tasks = get_all_active_tasks(user_id)
