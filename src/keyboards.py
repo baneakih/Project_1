@@ -48,3 +48,45 @@ def format_task_created(title: str, description: str | None, remind_date: str | 
         text += "⏰ Без напоминания\n"
 
     return text
+
+
+def make_tasks_keyboard(tasks):
+    markup = types.InlineKeyboardMarkup()
+
+    if not tasks:
+        markup.add(
+            types.InlineKeyboardButton(
+                "🎉 Все дела сделаны!",
+                callback_data="none",
+            )
+        )
+    else:
+        for task_id, title, remind_date in tasks:
+            date_str = f" (⏰ {remind_date})" if remind_date else ""
+
+            markup.row(
+                types.InlineKeyboardButton(
+                    f"📌 {title}{date_str}",
+                    callback_data=f"view_{task_id}",
+                ),
+                types.InlineKeyboardButton(
+                    "🗑",
+                    callback_data=f"listdelete_{task_id}",
+                ),
+            )
+
+        markup.add(
+            types.InlineKeyboardButton(
+                "🚨 Удалить все мои задачи",
+                callback_data="confirm_delete_all",
+            )
+        )
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "🔙 Назад в главное меню",
+            callback_data="go_to_main",
+        )
+    )
+
+    return markup

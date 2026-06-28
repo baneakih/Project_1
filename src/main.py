@@ -34,6 +34,7 @@ from utils import (
 from keyboards import (
     make_main_keyboard,
     make_reminder_keyboard,
+    make_tasks_keyboard,
     format_task_created,
 )
 
@@ -100,37 +101,9 @@ def is_task_like(text: str) -> bool:
     return any(word in lowered for word in TASK_WORDS)
 
 
-# ---------- Keyboards ----------
-def make_tasks_keyboard(user_id: int):
-    markup = types.InlineKeyboardMarkup()
+def get_tasks_keyboard(user_id: int):
     tasks = get_all_active_tasks(user_id)
-
-    if not tasks:
-        markup.add(
-            types.InlineKeyboardButton("🎉 Все дела сделаны!", callback_data="none")
-        )
-    else:
-        for task_id, title, remind_date in tasks:
-            date_str = f" (⏰ {remind_date})" if remind_date else ""
-            markup.row(
-                types.InlineKeyboardButton(
-                    f"📌 {title}{date_str}", callback_data=f"view_{task_id}"
-                ),
-                types.InlineKeyboardButton("🗑", callback_data=f"listdelete_{task_id}"),
-            )
-
-        markup.add(
-            types.InlineKeyboardButton(
-                "🚨 Удалить все мои задачи", callback_data="confirm_delete_all"
-            )
-        )
-
-    markup.add(
-        types.InlineKeyboardButton(
-            "🔙 Назад в главное меню", callback_data="go_to_main"
-        )
-    )
-    return markup
+    return make_tasks_keyboard(tasks)
 
 
 # ---------- Reminders ----------
@@ -416,7 +389,7 @@ def handle_to_list(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text="🗂 Ваш список активных задач:",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -489,7 +462,7 @@ def handle_complete(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text="🎉 Отлично! Задача выполнена.",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -503,7 +476,7 @@ def handle_snooze_15(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text=f"⏰ Хорошо, напомню ещё раз в {new_time} МСК.",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -517,7 +490,7 @@ def handle_snooze_60(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text=f"⏰ Хорошо, напомню ещё раз в {new_time} МСК.",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -531,7 +504,7 @@ def handle_delete(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text="🗑 Задача полностью удалена.",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -544,7 +517,7 @@ def handle_list_delete(call):
     safe_edit_message_reply_markup(
         chat_id=chat_id,
         message_id=call.message.id,
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
@@ -578,7 +551,7 @@ def execute_clear_database(call):
         chat_id=chat_id,
         message_id=call.message.id,
         text="🚨 Ваш личный список очищен. Все ваши задачи удалены.",
-        reply_markup=make_tasks_keyboard(chat_id),
+        reply_markup=get_tasks_keyboard(chat_id),
     )
 
 
